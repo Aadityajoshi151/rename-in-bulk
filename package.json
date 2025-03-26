@@ -1,0 +1,23 @@
+{
+  "name": "rename-in-bulk",
+  "version": "1.0.0",
+  "description": "A docker based utility to batch rename files.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Aadityajoshi151/rename-in-bulk.git"
+  },
+  "author": "Aaditya Joshi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Aadityajoshi151/rename-in-bulk/issues"
+  },
+  "homepage": "https://github.com/Aadityajoshi151/rename-in-bulk#readme",
+  "dependencies": {
+    "ejs": "^3.1.10",
+    "express": "^4.21.2"
+  }
+}
