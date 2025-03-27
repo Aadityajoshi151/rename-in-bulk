@@ -1,6 +1,6 @@
 {
   "name": "rename-in-bulk",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "A docker based utility to batch rename files.",
   "main": "server.js",
   "scripts": {
