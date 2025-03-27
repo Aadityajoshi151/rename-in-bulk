@@ -1,0 +1,68 @@
+#main {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.breadcrumb {
+    padding: 10px 0;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+}
+
+.breadcrumb a {
+    color: #0066cc;
+    text-decoration: none;
+}
+
+.file-table-container {
+    margin-top: 15px;
+    overflow-y: auto;
+    height: calc(100% - 60px);
+}
+
+.file-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.file-table th {
+    text-align: left;
+    padding: 10px;
+    background-color: #f5f5f5;
+    border-bottom: 2px solid #ddd;
+    position: sticky;
+    top: 0;
+}
+
+.file-table td {
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+    vertical-align: middle;
+}
+
+.file-row {
+    display: flex;
+    align-items: center;
+}
+
+.file-name {
+    flex-grow: 1;
+    user-select: text;
+    cursor: text;
+    padding: 2px 0;
+}
+
+.file-icon {
+    margin-right: 10px;
+    width: 20px;
+    text-align: center;
+}
+
+.file-checkbox {
+    margin-right: 10px;
+}
+
+.select-all-checkbox {
+    margin-right: 5px;
+}

@@ -1,0 +1,95 @@
+.rename-modules {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 5px;
+}
+
+.rename-module {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 15px;
+    background: #f9f9f9;
+    min-width: 250px;
+}
+
+.rename-option {
+    margin-bottom: 15px;
+}
+
+.rename-option-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.rename-option-checkbox {
+    margin-right: 10px;
+}
+
+.rename-control {
+    margin: 8px 0;
+    display: flex;
+    align-items: center;
+}
+
+.rename-control label {
+    margin-right: 10px;
+    min-width: 60px;
+}
+
+.rename-control input[type="text"],
+.rename-control input[type="number"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+    flex-grow: 1;
+}
+
+.rename-control input:disabled {
+    background-color: #f0f0f0;
+    cursor: not-allowed;
+}
+
+.button-container {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    display: flex;
+    gap: 10px;
+}
+
+.action-button {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.dry-run-btn {
+    background-color: #f0ad4e;
+    color: white;
+}
+
+.dry-run-btn:hover {
+    background-color: #ec971f;
+}
+
+.reset-btn {
+    background-color: #2872d3;
+    color: white;
+}
+
+.reset-btn:hover {
+    background-color: #0d62d1;
+}
+
+.rename-btn {
+    background-color: #5cb85c;
+    color: white;
+}
+
+.rename-btn:hover {
+    background-color: #4cae4c;
+}

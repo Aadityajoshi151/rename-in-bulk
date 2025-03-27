@@ -1,0 +1,44 @@
+<div id="main">
+    <div class="breadcrumb">
+        <a href="/?dir=<%= encodeURIComponent(ROOT_DIR) %>">Home</a>
+        <% if (breadcrumbParts.length > 0) { %>
+            <% let currentPath = ROOT_DIR; %>
+            <% for (const part of breadcrumbParts) { %>
+                <% currentPath = currentPath + '/' + part; %>
+                > <a href="/?dir=<%= encodeURIComponent(currentPath) %>"><%= part %></a>
+            <% } %>
+        <% } %>
+    </div>
+
+    <div class="file-table-container">
+        <table class="file-table">
+            <thead>
+                <tr>
+                    <th>
+                        <input type="checkbox" class="select-all-checkbox" id="selectAll">
+                        Original File Name
+                    </th>
+                    <th>New File Name</th>
+                </tr>
+            </thead>
+            <tbody id="fileList">
+                <% files.forEach(file => { %>
+                    <tr class="file-item <%= file.name.startsWith('.') ? 'hidden-item' : '' %>" 
+                        data-is-hidden="<%= file.name.startsWith('.') %>">
+                        <td>
+                            <div class="file-row">
+                                <input type="checkbox" class="file-checkbox">
+                                <span class="file-name"><%= file.name %></span>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="file-row">
+                                <span class="file-name new-file-name">--</span>
+                            </div>
+                        </td>
+                    </tr>
+                <% }); %>
+            </tbody>
+        </table>
+    </div>
+</div>

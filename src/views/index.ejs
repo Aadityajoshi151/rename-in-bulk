@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rename in Bulk (R.I.B)</title>
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/sidebar.css">
+    <link rel="stylesheet" href="/css/filearea.css">
+    <link rel="stylesheet" href="/css/rename_options.css">
+</head>
+<body>
+    <div class="top-container">
+        <!-- Sidebar Navigation -->
+        <%- include('partials/sidebar', {tree, currentDir, ROOT_DIR, isRoot}) %>
+        
+        <!-- Main File Area -->
+        <%- include('partials/filearea', {
+            files, 
+            currentDir,
+            parentDir,
+            isRoot,
+            ROOT_DIR,
+            breadcrumbParts,
+            currentDirName
+        }) %>
+    </div>
+
+    <!-- Rename Options -->
+    <%- include('partials/rename_options') %>
+
+    <script src="/js/main.js"></script>
+    <script src="/js/sidebar.js"></script>
+    <script src="/js/filearea.js"></script>
+    <script src="/js/rename_options.js"></script>
+</body>
+</html>

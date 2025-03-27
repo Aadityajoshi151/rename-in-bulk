@@ -4,7 +4,9 @@ const fs = require('fs');
 const app = express();
 
 // Root directory to browse (docker volume will be mounted at root)
-const ROOT_DIR = path.join(__dirname, '../root');
+// TODO Change this to the root directory
+const ROOT_DIR = path.join('/Users/aaditya/');
+//const ROOT_DIR = path.join(__dirname, '../root');
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.set('view engine', 'ejs');
@@ -79,7 +81,7 @@ app.get('/', (req, res) => {
             parentDir: path.dirname(currentDir),
             isRoot: currentDir === ROOT_DIR,
             ROOT_DIR: ROOT_DIR,
-            breadcrumbParts: currentDir.replace(ROOT_DIR, '').split(path.sep).filter(p => p),
+            breadcrumbParts: currentDir.replace(ROOT_DIR, '').split('/').filter(p => p),
             currentDirName: getLastPathComponent(currentDir, ROOT_DIR)
         });
     } catch (err) {
