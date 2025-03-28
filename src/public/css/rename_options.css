@@ -93,3 +93,12 @@
 .rename-btn:hover {
     background-color: #4cae4c;
 }
+.rename-module-content .rename-control {
+    opacity: 0.6; /* Default disabled look */
+    transition: opacity 0.2s ease;
+}
+
+.rename-module-checkbox:checked ~ .rename-module-content .rename-control,
+.rename-module-content .rename-control:not(:disabled) {
+    opacity: 1;
+}
