@@ -8,7 +8,14 @@ const app = express();
 const ROOT_DIR = path.join('/Users/aaditya/');
 //const ROOT_DIR = path.join(__dirname, '../root');
 
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, 'public'), {
+    setHeaders: (res, path) => {
+        if (path.endsWith('.js')) {
+            res.setHeader('Content-Type', 'application/javascript');
+        }
+    }
+}));
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
