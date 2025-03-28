@@ -1,17 +1,25 @@
 <div class="rename-module">
     <div class="rename-option-header">
-        <input type="checkbox" class="rename-module-checkbox" id="02replaceModuleCheckbox">
-        <label for="02replaceModuleCheckbox"><h3>Replace [2]</h3></label>
+        <input type="checkbox" class="rename-module-checkbox" id="replaceModuleCheckbox">
+        <label for="replaceModuleCheckbox"><h3>Replace [2]</h3></label>
     </div>
 
     <div class="rename-module-content">
+        <div class="rename-control">
+            <label>Replace:</label>
+            <input type="text" id="replaceText" placeholder="Text to replace">
+        </div>
 
         <div class="rename-control">
-            <label>Replace</label>
-            <input type="text" id="02replaceText">
-            <label>With</label>
-            <input type="text" id="02replaceWithText">
-            <label>Match Case</label>
-            <input type="checkbox" id="02replaceMatchCase">
+            <label>With:</label>
+            <input type="text" id="replaceWithText" placeholder="Replacement text">
+        </div>
+
+        <div class="rename-control">
+            <label class="checkbox-label">
+                <input type="checkbox" id="replaceMatchCase">
+                Match Case
+            </label>
         </div>
     </div>
+</div>
