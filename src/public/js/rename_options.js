@@ -1,11 +1,14 @@
 import { initNameModule } from './rename_modules/rm01_name.js';
 import { initReplaceModule } from './rename_modules/rm02_replace.js';
+import { initCaseModule } from './rename_modules/rm03_case.js';
+
 
 
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize all rename modules
     const _01_nameModule = initNameModule();
     const replaceModule = initReplaceModule();
+    const caseModule = initCaseModule();
 
     // Dry Run button handler
     document.getElementById('dryRunButton')?.addEventListener('click', () => {
