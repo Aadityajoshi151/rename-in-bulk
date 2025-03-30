@@ -13,8 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // Dry Run button handler
     document.getElementById('dryRunButton')?.addEventListener('click', () => {
         if (_01_nameModule.isNameModuleEnabled()) {
-            console.log('Name Operation:', _01_nameModule.getNameOperation());
-            console.log('Name Text:', _01_nameModule.getNameText());
+            // console.log('Name Operation:', _01_nameModule.getnameOperation());
+            // console.log('Name Text:', _01_nameModule.getnameText());
         }
         // Add other module checks here
     });

@@ -25,6 +25,6 @@ export function initCaseModule() {
     }
 
     return {
-        getNameOperation: () => nameOperation?.value,
+        getCaseOperation: () => caseOperation?.value,
     };
 }

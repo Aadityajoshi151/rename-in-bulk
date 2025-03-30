@@ -1,20 +1,20 @@
 export function initNameModule() {
-    const nameModuleCheckbox = document.getElementById('nameModuleCheckbox');
-    const nameOperation = document.getElementById('nameOperation');
-    const nameText = document.getElementById('nameText');
+    const _01_nameModuleCheckbox = document.getElementById('01_nameModuleCheckbox');
+    const _01_nameOperation = document.getElementById('01_nameOperation');
+    const _01_nameText = document.getElementById('01_nameText');
 
-    if (nameModuleCheckbox) {
+    if (_01_nameModuleCheckbox) {
         // Initialize disabled state (checkbox unchecked by default)
         toggleModuleEnabled(false);
         
-        nameModuleCheckbox.addEventListener('change', function() {
+        _01_nameModuleCheckbox.addEventListener('change', function() {
             toggleModuleEnabled(this.checked);
         });
     }
 
     function toggleModuleEnabled(enabled) {
-        nameOperation.disabled = !enabled;
-        nameText.disabled = !enabled;
+        _01_nameOperation.disabled = !enabled;
+        _01_nameText.disabled = !enabled;
         
         // Visual feedback
         const controls = document.querySelectorAll('.rename-module-content .rename-control');
@@ -24,8 +24,8 @@ export function initNameModule() {
     }
 
     return {
-        getNameOperation: () => nameOperation?.value,
-        getNameText: () => nameText?.value,
-        isNameModuleEnabled: () => nameModuleCheckbox?.checked
+        get01_nameOperation: () => _01_nameOperation?.value,
+        get01_nameText: () => _01_nameText?.value,
+        isNameModuleEnabled: () => _01_nameModuleCheckbox?.checked
     };
 }
