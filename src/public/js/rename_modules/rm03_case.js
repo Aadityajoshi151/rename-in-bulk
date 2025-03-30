@@ -1,4 +1,4 @@
-export function initCaseModule() {
+export function _03_initCaseModule() {
     const _03_caseCheckbox = document.getElementById('03_caseModuleCheckbox');
     const _03_caseOperation = document.getElementById('03_caseOperation');
 

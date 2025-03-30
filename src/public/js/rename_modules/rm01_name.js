@@ -1,4 +1,4 @@
-export function initNameModule() {
+export function _01_initNameModule() {
     const _01_nameModuleCheckbox = document.getElementById('01_nameModuleCheckbox');
     const _01_nameOperation = document.getElementById('01_nameOperation');
     const _01_nameText = document.getElementById('01_nameText');

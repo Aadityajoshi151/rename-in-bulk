@@ -1,4 +1,4 @@
-export function initReplaceModule() {
+export function _02_initReplaceModule() {
     const _02_replaceCheckbox = document.getElementById('02_replaceModuleCheckbox');
     const _02_replaceText = document.getElementById('02_replaceText');
     const _02_replaceWithText = document.getElementById('02_replaceWithText');
