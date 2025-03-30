@@ -1,21 +1,21 @@
 export function initCaseModule() {
-    const caseCheckbox = document.getElementById('caseModuleCheckbox');
-    const caseOperation = document.getElementById('caseOperation');
+    const _03_caseCheckbox = document.getElementById('03_caseModuleCheckbox');
+    const _03_caseOperation = document.getElementById('03_caseOperation');
 
     // Initialize disabled state
     toggleCaseEnabled(false);
     
-    if (caseCheckbox) {
-        caseCheckbox.addEventListener('change', function() {
+    if (_03_caseCheckbox) {
+        _03_caseCheckbox.addEventListener('change', function() {
             toggleCaseEnabled(this.checked);
         });
     }
 
     function toggleCaseEnabled(enabled) {
-        caseOperation.disabled = !enabled;
+        _03_caseOperation.disabled = !enabled;
         
         // Get the parent module first
-        const module = caseCheckbox.closest('.rename-module');
+        const module = _03_caseCheckbox.closest('.rename-module');
         if (module) {
             const controls = module.querySelectorAll('.rename-control');
             controls.forEach(control => {
@@ -25,6 +25,6 @@ export function initCaseModule() {
     }
 
     return {
-        getCaseOperation: () => caseOperation?.value,
+        getCaseOperation: () => _03_caseOperation?.value,
     };
 }
