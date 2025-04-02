@@ -1,6 +1,7 @@
 import { _01_initNameModule } from './rename_modules/rm01_name.js';
 import { _02_initReplaceModule } from './rename_modules/rm02_replace.js';
 import { _03_initCaseModule } from './rename_modules/rm03_case.js';
+import { _04_initRemoveModule } from './rename_modules/rm04_remove.js';
 
 
 
@@ -9,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const _01_nameModule = _01_initNameModule();
     const _02_replaceModule = _02_initReplaceModule();
     const _03_caseModule = _03_initCaseModule();
+    const _04_removeModule = _04_initRemoveModule();
 
     // Dry Run button handler
     document.getElementById('dryRunButton')?.addEventListener('click', () => {
