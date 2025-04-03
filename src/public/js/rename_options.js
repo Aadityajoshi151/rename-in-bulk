@@ -3,6 +3,7 @@ import { _02_initReplaceModule } from './rename_modules/rm02_replace.js';
 import { _03_initCaseModule } from './rename_modules/rm03_case.js';
 import { _04_initRemoveModule } from './rename_modules/rm04_remove.js';
 import { _05_initAddModule } from './rename_modules/rm05_add.js';
+import { _06_initFolderNameModule } from './rename_modules/rm06_folder_name.js';
 
 
 
@@ -13,6 +14,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const _03_caseModule = _03_initCaseModule();
     const _04_removeModule = _04_initRemoveModule();
     const _05_addModule = _05_initAddModule();
+    const _06_folderNameModule = _06_initFolderNameModule();
 
     // Dry Run button handler
     document.getElementById('dryRunButton')?.addEventListener('click', () => {
