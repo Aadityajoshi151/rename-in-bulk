@@ -4,6 +4,7 @@ import { _03_initCaseModule } from './rename_modules/rm03_case.js';
 import { _04_initRemoveModule } from './rename_modules/rm04_remove.js';
 import { _05_initAddModule } from './rename_modules/rm05_add.js';
 import { _06_initFolderNameModule } from './rename_modules/rm06_folder_name.js';
+import { _07_initNumberingModule } from './rename_modules/rm07_numbering.js';
 
 
 
@@ -15,6 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const _04_removeModule = _04_initRemoveModule();
     const _05_addModule = _05_initAddModule();
     const _06_folderNameModule = _06_initFolderNameModule();
+    const _07_numberingModule = _07_initNumberingModule();
 
     // Dry Run button handler
     document.getElementById('dryRunButton')?.addEventListener('click', () => {
