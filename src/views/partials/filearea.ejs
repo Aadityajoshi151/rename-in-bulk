@@ -7,7 +7,13 @@
                 <% currentPath = currentPath + '/' + part; %>
                 > <a href="/?dir=<%= encodeURIComponent(currentPath) %>"><%= part %></a>
             <% } %>
+            <div class="button-container" style="text-align: right;">
+                <button class="action-button reset-btn" id="resetButton">Reset</button>
+                <button class="action-button dry-run-btn" id="dryRunButton">Dry Run</button>
+                <button class="action-button rename-btn" id="renameButton">Rename</button>
+              </div>
         <% } %>
+
     </div>
 
     <div class="file-table-container">
