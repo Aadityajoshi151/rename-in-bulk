@@ -89,6 +89,14 @@ export function _03_initCaseModule() {
                     case 'sentence':
                         newName = namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase();
                         break;
+                    case 'alternate':
+                        newName = namePart
+                            .split('')
+                            .map(function (char, index) {
+                                return index % 2 === 0 ? char.toUpperCase() : char.toLowerCase();
+                            })
+                            .join('');
+                        break;
                     default:
                         newName = namePart; // No operation
                 }
