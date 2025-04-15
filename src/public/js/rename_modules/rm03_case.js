@@ -86,6 +86,9 @@ export function _03_initCaseModule() {
                             })
                             .join(' ');
                         break;
+                    case 'sentence':
+                        newName = namePart.charAt(0).toUpperCase() + namePart.slice(1).toLowerCase();
+                        break;
                     default:
                         newName = namePart; // No operation
                 }
