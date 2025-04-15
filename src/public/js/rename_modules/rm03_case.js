@@ -1,15 +1,19 @@
-import { resetFileNames, resetSelectedFileNames } from './common.js';
+import { splitFileName, toggleModule, resetFileNames, resetSelectedFileNames } from './common.js';
 
 export function _03_initCaseModule() {
     const _03_caseCheckbox = document.getElementById('03_caseModuleCheckbox');
     const _03_caseOperation = document.getElementById('03_caseOperation');
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
 
-    toggleCaseEnabled(false); // Initially disable the case operation
+    toggleModule(false, _03_caseCheckbox.closest('.rename-module'), _03_caseOperation); // Initially disable the module
 
     if (_03_caseCheckbox) {
         _03_caseCheckbox.addEventListener('change', function () {
-            toggleCaseEnabled(this.checked);
+            toggleModule(this.checked, _03_caseCheckbox.closest('.rename-module'), _03_caseOperation);
+            if (!this.checked) {
+                resetFileNames(fileList); // Reset all file names when the module is disabled
+                _03_caseOperation.value = 'Same'; // Reset dropdown to its default value
+            }
         });
     }
 
@@ -21,7 +25,6 @@ export function _03_initCaseModule() {
         });
     }
 
-    // Add event listeners to file checkboxes
     fileList.forEach(function (fileRow) {
         const checkbox = fileRow.querySelector('.file-checkbox');
         if (checkbox) {
@@ -37,38 +40,14 @@ export function _03_initCaseModule() {
         }
     });
 
-    function toggleCaseEnabled(enabled) {
-        _03_caseOperation.disabled = !enabled;
-
-        const module = _03_caseCheckbox.closest('.rename-module');
-        if (module) {
-            const controls = module.querySelectorAll('.rename-control');
-            for (let i = 0; i < controls.length; i++) {
-                controls[i].style.opacity = enabled ? 1 : 0.6;
-            }
-        }
-
-        if (!enabled) {
-            resetFileNames(fileList); // Reset all file names when the module is disabled
-            _03_caseOperation.value = 'Same'; // Reset dropdown to its default value
-        }
-    }
-
     function applyCaseOperation(operation) {
-        for (let i = 0; i < fileList.length; i++) {
-            const fileRow = fileList[i];
-            const checkbox = fileRow.querySelector('.file-checkbox'); // Checkbox for the file
-            const originalNameElement = fileRow.querySelector('.file-name'); // Original name
-            const newNameElement = fileRow.querySelector('.new-file-name'); // New name
+        fileList.forEach(function (fileRow) {
+            const checkbox = fileRow.querySelector('.file-checkbox');
+            const originalNameElement = fileRow.querySelector('.file-name');
+            const newNameElement = fileRow.querySelector('.new-file-name');
 
-            // Apply changes only if the checkbox is checked
             if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
-                const originalName = originalNameElement.textContent;
-
-                // Split the filename and extension
-                const lastDotIndex = originalName.lastIndexOf('.');
-                const namePart = lastDotIndex !== -1 ? originalName.substring(0, lastDotIndex) : originalName;
-                const extensionPart = lastDotIndex !== -1 ? originalName.substring(lastDotIndex) : '';
+                const { namePart, extensionPart } = splitFileName(originalNameElement.textContent);
 
                 let newName = namePart;
                 switch (operation) {
@@ -98,21 +77,12 @@ export function _03_initCaseModule() {
                             .join('');
                         break;
                     default:
-                        newName = namePart; // No operation
+                        newName = namePart; 
                 }
 
-                // Combine the modified name with the original extension
                 newNameElement.textContent = newName + extensionPart;
-
-                // Set the new name color to green
                 newNameElement.style.color = 'green';
             }
-        }
+        });
     }
-
-    return {
-        getCaseOperation: function () {
-            return _03_caseOperation ? _03_caseOperation.value : null;
-        },
-    };
 }
