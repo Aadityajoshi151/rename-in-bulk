@@ -50,6 +50,7 @@ export function _03_initCaseModule() {
 
         if (!enabled) {
             resetFileNames(fileList); // Reset all file names when the module is disabled
+            _03_caseOperation.value = 'Same'; // Reset dropdown to its default value
         }
     }
 
