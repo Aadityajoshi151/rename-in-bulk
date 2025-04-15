@@ -49,7 +49,7 @@ export function _03_initCaseModule() {
         }
 
         if (!enabled) {
-            resetSelectedFileNames(fileList); // Use the shared resetSelectedFileNames function
+            resetFileNames(fileList); // Reset all file names when the module is disabled
         }
     }
 
