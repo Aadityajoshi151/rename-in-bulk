@@ -6,13 +6,14 @@ export function _02_initReplaceModule() {
     const _02_replaceWithText = document.getElementById('02_replaceWithText');
     const _02_matchCaseCheckbox = document.getElementById('02_replaceMatchCase');
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
+    const module_elements = [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox]
 
     // Initialize disabled state
-    toggleModule(false, _02_replaceCheckbox.closest('.rename-module'), [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox]);
+    toggleModule(false, _02_replaceCheckbox.closest('.rename-module'), module_elements);
 
     if (_02_replaceCheckbox) {
         _02_replaceCheckbox.addEventListener('change', function () {
-            toggleModule(this.checked, _02_replaceCheckbox.closest('.rename-module'), [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox]);
+            toggleModule(this.checked, _02_replaceCheckbox.closest('.rename-module'), module_elements);
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
                 _02_replaceText.value = ''; // Reset replace text
@@ -22,8 +23,8 @@ export function _02_initReplaceModule() {
         });
     }
 
-    for (let i = 0; i < [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox].length; i++) {
-        const control = [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox][i];
+    for (let i = 0; i < module_elements.length; i++) {
+        const control = module_elements[i];
         if (control) {
             control.addEventListener('input', function () {
                 if (_02_replaceCheckbox.checked) {
