@@ -5,15 +5,15 @@ export function splitFileName(fileName) {
     return { namePart, extensionPart };
 }
 
-export function toggleModule(enabled, module, dropdown) {
-    if (dropdown) {
-        dropdown.disabled = !enabled;
+export function toggleModule(enabled, module, controls = []) {
+    for (let i=0; i < controls.length; i++) {
+        controls[i].disabled = !enabled;
     }
 
     if (module) {
-        const controls = module.querySelectorAll('.rename-control');
-        for (let i = 0; i < controls.length; i++) {
-            controls[i].style.opacity = enabled ? 1 : 0.6;
+        const moduleControls = module.querySelectorAll('.rename-control');
+        for (let i = 0; i < moduleControls.length; i++) {
+            moduleControls[i].style.opacity = enabled ? '1' : '0.6';
         }
     }
 }
