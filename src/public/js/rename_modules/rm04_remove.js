@@ -1,4 +1,4 @@
-import { toggleModule, resetFileNames, resetSelectedFileNames } from './common.js';
+import { toggleModule, resetFileNames, resetSelectedFileNames, splitFileName } from './common.js';
 
 export function _04_initRemoveModule() {
     const _04_removeCheckbox = document.getElementById('04_removeModuleCheckbox');
@@ -68,7 +68,10 @@ export function _04_initRemoveModule() {
             if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
                 const originalName = originalNameElement.textContent;
 
-                let newName = originalName;
+                // Split the file name into namePart and extensionPart
+                const { namePart, extensionPart } = splitFileName(originalName);
+
+                let newName = namePart;
 
                 // Remove First N Characters
                 if (firstN > 0) {
@@ -85,7 +88,8 @@ export function _04_initRemoveModule() {
                     newName = newName.substring(0, fromIndex) + newName.substring(toIndex + 1);
                 }
 
-                newNameElement.textContent = newName;
+                // Combine the modified namePart with the original extensionPart
+                newNameElement.textContent = newName + extensionPart;
                 newNameElement.style.color = 'green'; // Highlight the new name in green
             }
         }
