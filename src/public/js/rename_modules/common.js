@@ -70,3 +70,25 @@ export function resetSelectedFileNames(fileList) {
         }
     });
 }
+
+export function handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, applyOperation, moduleCheckbox, fileList) {
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener('change', function () {
+            const isChecked = this.checked;
+
+            // Select or deselect all file checkboxes
+            for (let i = 0; i < fileCheckboxes.length; i++) {
+                fileCheckboxes[i].checked = isChecked;
+            }
+
+            // Reapply the module operation if the module is enabled
+            if (moduleCheckbox && moduleCheckbox.checked) {
+                if (isChecked) {
+                    applyOperation(); // Apply operation when "Select All" is checked
+                } else {
+                    resetFileNames(fileList); // Reset file names when "Select All" is unchecked
+                }
+            }
+        });
+    }
+}
