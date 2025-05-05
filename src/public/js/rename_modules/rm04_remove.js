@@ -18,6 +18,7 @@ export function _04_initRemoveModule() {
 
     // Initialize the module state
     toggleModule(_04_removeCheckbox.checked, module_elements);
+    setDefaultValues();
 
     if (_04_removeCheckbox) {
         _04_removeCheckbox.addEventListener('change', function () {
@@ -88,6 +89,13 @@ export function _04_initRemoveModule() {
             newNameElement.textContent = newName + extensionPart;
             highlightNewName(newNameElement); // Highlight the new name in green
         });
+    }
+
+    function setDefaultValues() {
+        _04_first_n.value = '0';
+        _04_last_n.value = '0';
+        _04_from.value = '0';
+        _04_to.value = '0';
     }
 
     return {
