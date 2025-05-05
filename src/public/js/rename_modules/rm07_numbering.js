@@ -20,7 +20,7 @@ export function _07_initNumberingModule() {
     // Initialize the module state
     toggleModule(_07_numberingCheckbox.checked, module_elements);
     updateAtPositionState();
-    //setDefaultValues();
+    setDefaultValues();
 
     if (_07_numberingCheckbox) {
         _07_numberingCheckbox.addEventListener('change', function () {
@@ -116,7 +116,7 @@ export function _07_initNumberingModule() {
     }
 
     function resetInputs() {
-        _07_numberingMode.value = 'Prefix'; // Reset dropdown to default
+        _07_numberingMode.value = 'Suffix'; // Reset dropdown to default
         _07_atPosition.value = '0'; // Reset position input
         _07_atPosition.disabled = true; // Disable "At Pos" input
         _07_startIndex.value = '0'; // Reset start index input
@@ -129,6 +129,8 @@ export function _07_initNumberingModule() {
         _07_startIndex.value = '0';
         _07_increment.value = '1';
         _07_padding.value = '0';
+        _07_numberingMode.value = 'Suffix'; // Default to prefix
+        _07_atPosition.disabled = true; // Disable "At Pos" input by default
     }
     
     return {
