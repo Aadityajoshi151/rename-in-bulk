@@ -4,7 +4,8 @@ import {
     resetSelectedFileNames, 
     splitFileName, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _07_initNumberingModule() {
@@ -14,6 +15,8 @@ export function _07_initNumberingModule() {
     const _07_startIndex = document.getElementById('07_start_index'); // Input for starting index
     const _07_increment = document.getElementById('07_increment'); // Input for increment
     const _07_padding = document.getElementById('07_padding'); // Input for zero padding
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_07_numberingMode, _07_atPosition, _07_startIndex, _07_increment, _07_padding];
 
@@ -61,6 +64,11 @@ export function _07_initNumberingModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+        // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyNumberingOperation(); // Reapply the numbering operation to all selected files
+    }, _07_numberingCheckbox, fileList);
 
     function applyNumberingOperation() {
         // Ensure the module is enabled before applying the logic
