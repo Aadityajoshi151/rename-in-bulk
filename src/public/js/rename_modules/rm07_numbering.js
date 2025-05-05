@@ -2,12 +2,13 @@ import { toggleModule, resetFileNames, resetSelectedFileNames, splitFileName } f
 
 export function _07_initNumberingModule() {
     const _07_numberingCheckbox = document.getElementById('07_numberingModuleCheckbox');
-    const _07_numberingMode = document.getElementById('07_numberingMode'); // Dropdown for prefix/suffix
+    const _07_numberingMode = document.getElementById('07_numberingMode'); // Dropdown for prefix/suffix/at position
+    const _07_atPosition = document.getElementById('07_at_Position'); // Input for position
     const _07_startIndex = document.getElementById('07_start_index'); // Input for starting index
     const _07_increment = document.getElementById('07_increment'); // Input for increment
     const _07_padding = document.getElementById('07_padding'); // Input for zero padding
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
-    const module_elements = [_07_numberingMode, _07_startIndex, _07_increment, _07_padding];
+    const module_elements = [_07_numberingMode, _07_atPosition, _07_startIndex, _07_increment, _07_padding];
 
     // Initialize disabled state
     toggleModule(false, _07_numberingCheckbox.closest('.rename-module'), module_elements);
@@ -18,6 +19,8 @@ export function _07_initNumberingModule() {
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
                 _07_numberingMode.value = 'Prefix'; // Reset dropdown to default
+                _07_atPosition.value = '0'; // Reset position input
+                _07_atPosition.disabled = true; // Disable "At Pos" input
                 _07_startIndex.value = '0'; // Reset start index input
                 _07_increment.value = '1'; // Reset increment input
                 _07_padding.value = '0'; // Reset padding input
@@ -26,6 +29,17 @@ export function _07_initNumberingModule() {
             }
         });
     }
+
+    // Enable or disable "At Pos" input based on the selected mode
+    _07_numberingMode.addEventListener('change', function () {
+        if (this.value === 'AtPosition') {
+            _07_atPosition.disabled = false; // Enable "At Pos" input
+        } else {
+            _07_atPosition.disabled = true; // Disable "At Pos" input
+            _07_atPosition.value = '0'; // Reset "At Pos" input
+        }
+        applyNumberingOperation(); // Reapply numbering operation when mode changes
+    });
 
     for (let i = 0; i < module_elements.length; i++) {
         const control = module_elements[i];
@@ -56,6 +70,7 @@ export function _07_initNumberingModule() {
 
     function applyNumberingOperation() {
         const mode = _07_numberingMode.value || 'Prefix'; // Get numbering mode
+        const atPosition = parseInt(_07_atPosition.value, 10); // Get position input
         const startIndex = parseInt(_07_startIndex.value, 10) || 0; // Get starting index
         const increment = parseInt(_07_increment.value, 10) || 1; // Get increment value
         const padding = parseInt(_07_padding.value, 10) || 0; // Get zero padding value
@@ -84,6 +99,8 @@ export function _07_initNumberingModule() {
                     newName = formattedNumber + newName;
                 } else if (mode === 'Suffix') {
                     newName = newName + formattedNumber;
+                } else if (mode === 'AtPosition' && !isNaN(atPosition) && atPosition >= 0 && atPosition <= newName.length) {
+                    newName = newName.substring(0, atPosition) + formattedNumber + newName.substring(atPosition);
                 }
 
                 // Combine the modified namePart with the original extensionPart
@@ -99,6 +116,9 @@ export function _07_initNumberingModule() {
     return {
         getNumberingMode: function () {
             return _07_numberingMode ? _07_numberingMode.value : 'Prefix';
+        },
+        getAtPosition: function () {
+            return _07_atPosition ? _07_atPosition.value : '0';
         },
         getStartIndex: function () {
             return _07_startIndex ? _07_startIndex.value : '0';
