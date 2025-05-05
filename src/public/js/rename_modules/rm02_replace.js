@@ -3,13 +3,16 @@ import {
     resetFileNames, 
     resetSelectedFileNames, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange } from './common.js';
+    handleFileCheckboxChange,
+    handleSelectAllLogic, } from './common.js';
 
 export function _02_initReplaceModule() {
     const _02_replaceCheckbox = document.getElementById('02_replaceModuleCheckbox');
     const _02_replaceText = document.getElementById('02_replaceText');
     const _02_replaceWithText = document.getElementById('02_replaceWithText');
     const _02_matchCaseCheckbox = document.getElementById('02_replaceMatchCase');
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox];
 
@@ -48,6 +51,11 @@ export function _02_initReplaceModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+    // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyReplaceOperation(); // Reapply the replace operation to all selected files
+    }, _02_replaceCheckbox, fileList);
 
     function applyReplaceOperation() {
         // Ensure the module is enabled before applying the logic
