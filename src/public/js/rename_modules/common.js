@@ -5,17 +5,44 @@ export function splitFileName(fileName) {
     return { namePart, extensionPart };
 }
 
-export function toggleModule(enabled, module, controls = []) {
-    for (let i=0; i < controls.length; i++) {
+export function toggleModule(enabled, controls) {
+    for (let i = 0; i < controls.length; i++) {
         controls[i].disabled = !enabled;
-    }
-
-    if (module) {
-        const moduleControls = module.querySelectorAll('.rename-control');
-        for (let i = 0; i < moduleControls.length; i++) {
-            moduleControls[i].style.opacity = enabled ? '1' : '0.6';
+        if (!enabled) {
+            // Reset the value of the control if it's disabled
+            if (controls[i].tagName === 'SELECT') {
+                controls[i].value = controls[i].options[0].value; // Reset to the first option
+            } else if (controls[i].tagName === 'INPUT') {
+                controls[i].value = ''; // Clear the input field
+            }
         }
     }
+}
+
+export function applyToSelectedFiles(fileList, callback) {
+    for (let i = 0; i < fileList.length; i++) {
+        const fileRow = fileList[i];
+        const checkbox = fileRow.querySelector('.file-checkbox');
+        if (checkbox && checkbox.checked) {
+            callback(fileRow);
+        }
+    }
+}
+
+export function handleFileCheckboxChange(fileList, callback) {
+    for (let i = 0; i < fileList.length; i++) {
+        const fileRow = fileList[i];
+        const checkbox = fileRow.querySelector('.file-checkbox');
+        if (checkbox) {
+            checkbox.addEventListener('change', function () {
+                callback(fileRow, checkbox.checked);
+            });
+        }
+    }
+}
+
+export function highlightNewName(element) {
+    element.style.color = 'green';
 }
 
 export function resetFileNames(fileList) {
