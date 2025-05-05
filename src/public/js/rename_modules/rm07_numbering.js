@@ -1,4 +1,11 @@
-import { toggleModule, resetFileNames, resetSelectedFileNames, splitFileName } from './common.js';
+import { 
+    toggleModule, 
+    resetFileNames, 
+    resetSelectedFileNames, 
+    splitFileName, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange, 
+    highlightNewName } from './common.js';
 
 export function _07_initNumberingModule() {
     const _07_numberingCheckbox = document.getElementById('07_numberingModuleCheckbox');
@@ -10,36 +17,31 @@ export function _07_initNumberingModule() {
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_07_numberingMode, _07_atPosition, _07_startIndex, _07_increment, _07_padding];
 
-    // Initialize disabled state
-    toggleModule(false, _07_numberingCheckbox.closest('.rename-module'), module_elements);
+    // Initialize the module state
+    toggleModule(_07_numberingCheckbox.checked, module_elements);
+    updateAtPositionState();
+    //setDefaultValues();
 
     if (_07_numberingCheckbox) {
         _07_numberingCheckbox.addEventListener('change', function () {
-            toggleModule(this.checked, _07_numberingCheckbox.closest('.rename-module'), module_elements);
+            toggleModule(this.checked, module_elements);
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
-                _07_numberingMode.value = 'Prefix'; // Reset dropdown to default
-                _07_atPosition.value = '0'; // Reset position input
-                _07_atPosition.disabled = true; // Disable "At Pos" input
-                _07_startIndex.value = '0'; // Reset start index input
-                _07_increment.value = '1'; // Reset increment input
-                _07_padding.value = '0'; // Reset padding input
+                resetInputs(); // Reset all inputs to their default values
             } else {
-                applyNumberingOperation(); // Apply changes to all selected files when the module is enabled
+                applyNumberingOperation(); // Apply changes when the module is enabled
             }
         });
     }
 
-    // Enable or disable "At Pos" input based on the selected mode
-    _07_numberingMode.addEventListener('change', function () {
-        if (this.value === 'AtPosition') {
-            _07_atPosition.disabled = false; // Enable "At Pos" input
-        } else {
-            _07_atPosition.disabled = true; // Disable "At Pos" input
-            _07_atPosition.value = '0'; // Reset "At Pos" input
-        }
-        applyNumberingOperation(); // Reapply numbering operation when mode changes
-    });
+    if (_07_numberingMode) {
+        _07_numberingMode.addEventListener('change', function () {
+            updateAtPositionState(); // Enable/disable "At Pos" input based on the selected mode
+            if (_07_numberingCheckbox.checked) {
+                applyNumberingOperation(); // Reapply numbering operation when mode changes
+            }
+        });
+    }
 
     for (let i = 0; i < module_elements.length; i++) {
         const control = module_elements[i];
@@ -52,23 +54,19 @@ export function _07_initNumberingModule() {
         }
     }
 
-    for (let i = 0; i < fileList.length; i++) {
-        const fileRow = fileList[i];
-        const checkbox = fileRow.querySelector('.file-checkbox');
-        if (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (_07_numberingCheckbox.checked) {
-                    if (checkbox.checked) {
-                        applyNumberingOperation(); // Apply changes to newly selected files
-                    } else {
-                        resetSelectedFileNames([fileRow]); // Reset only this file row
-                    }
-                }
-            });
+    handleFileCheckboxChange(fileList, function (fileRow, isChecked) {
+        if (isChecked) {
+            applyNumberingOperation(); // Apply changes to newly selected files
+        } else {
+            resetSelectedFileNames([fileRow]); // Reset only this file row
         }
-    }
+    });
 
     function applyNumberingOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_07_numberingCheckbox.checked) {
+            return;
+        }
         const mode = _07_numberingMode.value || 'Prefix'; // Get numbering mode
         const atPosition = parseInt(_07_atPosition.value, 10); // Get position input
         const startIndex = parseInt(_07_startIndex.value, 10) || 0; // Get starting index
@@ -77,42 +75,62 @@ export function _07_initNumberingModule() {
 
         let currentIndex = startIndex;
 
-        for (let i = 0; i < fileList.length; i++) {
-            const fileRow = fileList[i];
-            const checkbox = fileRow.querySelector('.file-checkbox');
+        applyToSelectedFiles(fileList, function (fileRow) {
             const originalNameElement = fileRow.querySelector('.file-name');
             const newNameElement = fileRow.querySelector('.new-file-name');
+            const originalName = originalNameElement.textContent;
 
-            if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
-                const originalName = originalNameElement.textContent;
+            // Split the file name into namePart and extensionPart
+            const { namePart, extensionPart } = splitFileName(originalName);
 
-                // Split the file name into namePart and extensionPart
-                const { namePart, extensionPart } = splitFileName(originalName);
+            let newName = namePart;
 
-                let newName = namePart;
+            // Format the number with zero padding
+            const formattedNumber = String(currentIndex).padStart(padding, '0');
 
-                // Format the number with zero padding
-                const formattedNumber = String(currentIndex).padStart(padding, '0');
-
-                // Add numbering based on the selected mode
-                if (mode === 'Prefix') {
-                    newName = formattedNumber + newName;
-                } else if (mode === 'Suffix') {
-                    newName = newName + formattedNumber;
-                } else if (mode === 'AtPosition' && !isNaN(atPosition) && atPosition >= 0 && atPosition <= newName.length) {
-                    newName = newName.substring(0, atPosition) + formattedNumber + newName.substring(atPosition);
-                }
-
-                // Combine the modified namePart with the original extensionPart
-                newNameElement.textContent = newName + extensionPart;
-                newNameElement.style.color = 'green'; // Highlight the new name in green
-
-                // Increment the current index
-                currentIndex += increment;
+            // Add numbering based on the selected mode
+            if (mode === 'Prefix') {
+                newName = formattedNumber + newName;
+            } else if (mode === 'Suffix') {
+                newName = newName + formattedNumber;
+            } else if (mode === 'AtPosition' && !isNaN(atPosition) && atPosition >= 0 && atPosition <= newName.length) {
+                newName = newName.substring(0, atPosition) + formattedNumber + newName.substring(atPosition);
             }
+
+            // Combine the modified namePart with the original extensionPart
+            newNameElement.textContent = newName + extensionPart;
+            highlightNewName(newNameElement); // Highlight the new name in green
+
+            // Increment the current index
+            currentIndex += increment;
+        });
+    }
+
+    function updateAtPositionState() {
+        if (_07_numberingMode.value === 'AtPosition') {
+            _07_atPosition.disabled = false; // Enable "At Pos" input
+        } else {
+            _07_atPosition.disabled = true; // Disable "At Pos" input
+            _07_atPosition.value = '0'; // Reset "At Pos" input
         }
     }
 
+    function resetInputs() {
+        _07_numberingMode.value = 'Prefix'; // Reset dropdown to default
+        _07_atPosition.value = '0'; // Reset position input
+        _07_atPosition.disabled = true; // Disable "At Pos" input
+        _07_startIndex.value = '0'; // Reset start index input
+        _07_increment.value = '1'; // Reset increment input
+        _07_padding.value = '0'; // Reset padding input
+    }
+
+    function setDefaultValues() {
+        _07_atPosition.value = '0';
+        _07_startIndex.value = '0';
+        _07_increment.value = '1';
+        _07_padding.value = '0';
+    }
+    
     return {
         getNumberingMode: function () {
             return _07_numberingMode ? _07_numberingMode.value : 'Prefix';

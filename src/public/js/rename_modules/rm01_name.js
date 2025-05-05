@@ -1,105 +1,86 @@
-import { resetFileNames, resetSelectedFileNames, splitFileName } from './common.js';
+import { resetFileNames, 
+    resetSelectedFileNames,
+    splitFileName, 
+    toggleModule, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange, 
+    highlightNewName } from './common.js';
 
 export function _01_initNameModule() {
     const _01_nameModuleCheckbox = document.getElementById('01_nameModuleCheckbox');
     const _01_nameOperation = document.getElementById('01_nameOperation');
     const _01_nameText = document.getElementById('01_nameText');
-    const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
+    const fileList = document.querySelectorAll('#fileList .file-item');
+
+    // Initialize the module state
+    toggleModule(_01_nameModuleCheckbox.checked, [_01_nameOperation]);
+    updateInputState();
 
     if (_01_nameModuleCheckbox) {
-        // Initialize disabled state (checkbox unchecked by default)
-        toggleModuleEnabled(false);
-
         _01_nameModuleCheckbox.addEventListener('change', function () {
-            toggleModuleEnabled(this.checked);
+            toggleModule(this.checked, [_01_nameOperation]);
             if (!this.checked) {
-                resetFileNames(fileList); // Reset all file names when the module is disabled
-                _01_nameOperation.value = 'Keep'; // Reset dropdown to default
-                _01_nameText.value = ''; // Reset input field
-                _01_nameText.disabled = true; // Disable input field
+                resetFileNames(fileList);
+                _01_nameOperation.value = 'Keep';
+                _01_nameText.value = '';
+                _01_nameText.disabled = true; // Always disable the input when the module is disabled
             } else {
-                applyNameOperation(); // Apply changes when the module is enabled
+                updateInputState(); // Update the input state based on the dropdown value
+                applyNameOperation();
             }
         });
     }
 
     _01_nameOperation.addEventListener('change', function () {
-        if (this.value === 'Remove') {
-            _01_nameText.disabled = false; // Enable input field
-        } else {
-            _01_nameText.disabled = true; // Disable input field
-            _01_nameText.value = ''; // Reset input field
-        }
-        applyNameOperation(); // Apply changes when the dropdown value changes
+        updateInputState(); // Enable/disable the input based on the selected dropdown option
+        applyNameOperation();
     });
 
     _01_nameText.addEventListener('input', function () {
         if (_01_nameModuleCheckbox.checked && _01_nameOperation.value === 'Remove') {
-            applyNameOperation(); // Apply changes when the input value changes
+            applyNameOperation();
         }
     });
 
-    for (let i = 0; i < fileList.length; i++) {
-        const fileRow = fileList[i];
-        const checkbox = fileRow.querySelector('.file-checkbox');
-        if (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (_01_nameModuleCheckbox.checked) {
-                    if (checkbox.checked) {
-                        applyNameOperation(); // Apply changes to newly selected files
-                    } else {
-                        resetSelectedFileNames([fileRow]); // Reset only this file row
-                    }
-                }
-            });
+    handleFileCheckboxChange(fileList, (fileRow, isChecked) => {
+        if (isChecked) {
+            applyNameOperation();
+        } else {
+            resetSelectedFileNames([fileRow]);
         }
-    }
+    });
 
-    function toggleModuleEnabled(enabled) {
-        _01_nameOperation.disabled = !enabled;
-        _01_nameText.disabled = !enabled || _01_nameOperation.value !== 'Remove';
-
-        // Visual feedback
-        const controls = document.querySelectorAll('.rename-module-content .rename-control');
-        for (let i = 0; i < controls.length; i++) {
-            controls[i].style.opacity = enabled ? 1 : 0.6;
+    function updateInputState() {
+        // Enable the input only if "Remove" (New Name) is selected
+        _01_nameText.disabled = _01_nameOperation.value !== 'Remove';
+        if (_01_nameText.disabled) {
+            _01_nameText.value = ''; // Reset the input if it's disabled
         }
     }
 
     function applyNameOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_01_nameModuleCheckbox.checked) {
+            return;
+        }
         const operation = _01_nameOperation.value;
         const newName = _01_nameText.value;
 
-        for (let i = 0; i < fileList.length; i++) {
-            const fileRow = fileList[i];
-            const checkbox = fileRow.querySelector('.file-checkbox');
+        applyToSelectedFiles(fileList, (fileRow) => {
             const originalNameElement = fileRow.querySelector('.file-name');
             const newNameElement = fileRow.querySelector('.new-file-name');
+            const originalName = originalNameElement.textContent;
 
-            if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
-                const originalName = originalNameElement.textContent;
-
-                if (operation === 'Keep') {
-                    // Keep the original name
-                    newNameElement.textContent = originalName;
-                } else if (operation === 'Remove') {
-                    // Replace the name with the input value
-                    newNameElement.textContent = newName;
-                } else if (operation === 'Reverse') {
-                    // Reverse the original name (excluding the extension)
-                    const { namePart, extensionPart } = splitFileName(originalName);
-                    const reversedName = namePart.split('').reverse().join('');
-                    newNameElement.textContent = reversedName + extensionPart;
-                }
-
-                newNameElement.style.color = 'green'; // Highlight the new name in green
+            if (operation === 'Keep') {
+                newNameElement.textContent = originalName;
+            } else if (operation === 'Remove') {
+                newNameElement.textContent = newName;
+            } else if (operation === 'Reverse') {
+                const { namePart, extensionPart } = splitFileName(originalName);
+                newNameElement.textContent = namePart.split('').reverse().join('') + extensionPart;
             }
-        }
-    }
 
-    return {
-        get01_nameOperation: () => _01_nameOperation?.value,
-        get01_nameText: () => _01_nameText?.value,
-        isNameModuleEnabled: () => _01_nameModuleCheckbox?.checked,
-    };
+            highlightNewName(newNameElement);
+        });
+    }
 }

@@ -1,4 +1,11 @@
-import { toggleModule, resetFileNames, resetSelectedFileNames, splitFileName } from './common.js';
+import { 
+    toggleModule, 
+    resetFileNames, 
+    resetSelectedFileNames, 
+    splitFileName, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange, 
+    highlightNewName } from './common.js';
 
 export function _06_initFolderNameModule() {
     const _06_folderNameCheckbox = document.getElementById('06_folderNameModuleCheckbox');
@@ -7,18 +14,18 @@ export function _06_initFolderNameModule() {
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_06_folderNameMode, _06_separator];
 
-    // Initialize disabled state
-    toggleModule(false, _06_folderNameCheckbox.closest('.rename-module'), module_elements);
+    // Initialize the module state
+    toggleModule(_06_folderNameCheckbox.checked, module_elements);
 
     if (_06_folderNameCheckbox) {
         _06_folderNameCheckbox.addEventListener('change', function () {
-            toggleModule(this.checked, _06_folderNameCheckbox.closest('.rename-module'), module_elements);
+            toggleModule(this.checked, module_elements);
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
                 _06_folderNameMode.value = 'Prefix'; // Reset dropdown to default
                 _06_separator.value = ''; // Reset separator input
             } else {
-                applyFolderNameOperation(); // Apply changes to all selected files when the module is enabled
+                applyFolderNameOperation(); // Apply changes when the module is enabled
             }
         });
     }
@@ -34,53 +41,44 @@ export function _06_initFolderNameModule() {
         }
     }
 
-    for (let i = 0; i < fileList.length; i++) {
-        const fileRow = fileList[i];
-        const checkbox = fileRow.querySelector('.file-checkbox');
-        if (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (_06_folderNameCheckbox.checked) {
-                    if (checkbox.checked) {
-                        applyFolderNameOperation(); // Apply changes to newly selected files
-                    } else {
-                        resetSelectedFileNames([fileRow]); // Reset only this file row
-                    }
-                }
-            });
+    handleFileCheckboxChange(fileList, function (fileRow, isChecked) {
+        if (isChecked) {
+            applyFolderNameOperation(); // Apply changes to newly selected files
+        } else {
+            resetSelectedFileNames([fileRow]); // Reset only this file row
         }
-    }
+    });
 
     function applyFolderNameOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_06_folderNameCheckbox.checked) {
+            return;
+        }
         const folderName = getCurrentFolderNameFromURL(); // Dynamically fetch the current folder name
         const mode = _06_folderNameMode.value || 'Prefix'; // Get prefix/suffix mode
         const separator = _06_separator.value || ''; // Get separator value
 
-        for (let i = 0; i < fileList.length; i++) {
-            const fileRow = fileList[i];
-            const checkbox = fileRow.querySelector('.file-checkbox');
+        applyToSelectedFiles(fileList, function (fileRow) {
             const originalNameElement = fileRow.querySelector('.file-name');
             const newNameElement = fileRow.querySelector('.new-file-name');
+            const originalName = originalNameElement.textContent;
 
-            if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
-                const originalName = originalNameElement.textContent;
+            // Split the file name into namePart and extensionPart
+            const { namePart, extensionPart } = splitFileName(originalName);
 
-                // Split the file name into namePart and extensionPart
-                const { namePart, extensionPart } = splitFileName(originalName);
+            let newName = namePart;
 
-                let newName = namePart;
-
-                // Add folder name as prefix or suffix
-                if (mode === 'Prefix') {
-                    newName = folderName + separator + newName;
-                } else if (mode === 'Suffix') {
-                    newName = newName + separator + folderName;
-                }
-
-                // Combine the modified namePart with the original extensionPart
-                newNameElement.textContent = newName + extensionPart;
-                newNameElement.style.color = 'green'; // Highlight the new name in green
+            // Add folder name as prefix or suffix
+            if (mode === 'Prefix') {
+                newName = folderName + separator + newName;
+            } else if (mode === 'Suffix') {
+                newName = newName + separator + folderName;
             }
-        }
+
+            // Combine the modified namePart with the original extensionPart
+            newNameElement.textContent = newName + extensionPart;
+            highlightNewName(newNameElement); // Highlight the new name in green
+        });
     }
 
     function getCurrentFolderNameFromURL() {

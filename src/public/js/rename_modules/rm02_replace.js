@@ -1,4 +1,9 @@
-import { toggleModule, resetFileNames, resetSelectedFileNames } from './common.js';
+import { 
+    toggleModule, 
+    resetFileNames, 
+    resetSelectedFileNames, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange } from './common.js';
 
 export function _02_initReplaceModule() {
     const _02_replaceCheckbox = document.getElementById('02_replaceModuleCheckbox');
@@ -6,19 +11,21 @@ export function _02_initReplaceModule() {
     const _02_replaceWithText = document.getElementById('02_replaceWithText');
     const _02_matchCaseCheckbox = document.getElementById('02_replaceMatchCase');
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
-    const module_elements = [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox]
+    const module_elements = [_02_replaceText, _02_replaceWithText, _02_matchCaseCheckbox];
 
-    // Initialize disabled state
-    toggleModule(false, _02_replaceCheckbox.closest('.rename-module'), module_elements);
+    // Initialize the module state
+    toggleModule(_02_replaceCheckbox.checked, module_elements);
 
     if (_02_replaceCheckbox) {
         _02_replaceCheckbox.addEventListener('change', function () {
-            toggleModule(this.checked, _02_replaceCheckbox.closest('.rename-module'), module_elements);
+            toggleModule(this.checked, module_elements);
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
                 _02_replaceText.value = ''; // Reset replace text
                 _02_replaceWithText.value = ''; // Reset replace-with text
                 _02_matchCaseCheckbox.checked = false; // Reset match case checkbox
+            } else {
+                applyReplaceOperation(); // Apply changes when the module is enabled
             }
         });
     }
@@ -28,51 +35,42 @@ export function _02_initReplaceModule() {
         if (control) {
             control.addEventListener('input', function () {
                 if (_02_replaceCheckbox.checked) {
-                    applyReplaceOperation();
+                    applyReplaceOperation(); // Apply changes when inputs are modified
                 }
             });
         }
     }
 
-    for (let i = 0; i < fileList.length; i++) {
-        const fileRow = fileList[i];
-        const checkbox = fileRow.querySelector('.file-checkbox');
-        if (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (_02_replaceCheckbox.checked) {
-                    if (checkbox.checked) {
-                        applyReplaceOperation();
-                    } else {
-                        resetSelectedFileNames([fileRow]); // Reset only this file row
-                    }
-                }
-            });
+    handleFileCheckboxChange(fileList, (fileRow, isChecked) => {
+        if (isChecked) {
+            applyReplaceOperation(); // Apply changes to newly selected files
+        } else {
+            resetSelectedFileNames([fileRow]); // Reset only this file row
         }
-    }
+    });
 
     function applyReplaceOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_02_replaceCheckbox.checked) {
+            return;
+        }
         const replaceText = _02_replaceText.value || '';
         const replaceWithText = _02_replaceWithText.value || '';
         const matchCase = _02_matchCaseCheckbox.checked;
 
-        for (let i = 0; i < fileList.length; i++) {
-            const fileRow = fileList[i];
-            const checkbox = fileRow.querySelector('.file-checkbox');
+        applyToSelectedFiles(fileList, (fileRow) => {
             const originalNameElement = fileRow.querySelector('.file-name');
             const newNameElement = fileRow.querySelector('.new-file-name');
+            const originalName = originalNameElement.textContent;
 
-            if (checkbox && checkbox.checked && originalNameElement && newNameElement) {
-                const originalName = originalNameElement.textContent;
+            // Perform the replace operation
+            const regexFlags = matchCase ? 'g' : 'gi';
+            const regex = new RegExp(replaceText, regexFlags);
+            const newName = originalName.replace(regex, replaceWithText);
 
-                // Perform the replace operation
-                const regexFlags = matchCase ? 'g' : 'gi';
-                const regex = new RegExp(replaceText, regexFlags);
-                const newName = originalName.replace(regex, replaceWithText);
-
-                newNameElement.textContent = newName;
-                newNameElement.style.color = 'green'; // Highlight the new name in green
-            }
-        }
+            newNameElement.textContent = newName;
+            newNameElement.style.color = 'green'; // Highlight the new name in green
+        });
     }
 
     return {

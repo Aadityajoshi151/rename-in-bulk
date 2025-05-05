@@ -1,18 +1,28 @@
-import { splitFileName, toggleModule, resetFileNames, resetSelectedFileNames } from './common.js';
+import { 
+    splitFileName, 
+    toggleModule, 
+    resetFileNames, 
+    resetSelectedFileNames, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange, 
+    highlightNewName } from './common.js';
 
 export function _03_initCaseModule() {
     const _03_caseCheckbox = document.getElementById('03_caseModuleCheckbox');
     const _03_caseOperation = document.getElementById('03_caseOperation');
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
 
-    toggleModule(false, _03_caseCheckbox.closest('.rename-module'), _03_caseOperation); // Initially disable the module
+    // Initialize the module state
+    toggleModule(_03_caseCheckbox.checked, [_03_caseOperation]);
 
     if (_03_caseCheckbox) {
         _03_caseCheckbox.addEventListener('change', function () {
-            toggleModule(this.checked, _03_caseCheckbox.closest('.rename-module'), _03_caseOperation);
+            toggleModule(this.checked, [_03_caseOperation]);
             if (!this.checked) {
                 resetFileNames(fileList); // Reset all file names when the module is disabled
                 _03_caseOperation.value = 'Same'; // Reset dropdown to its default value
+            } else {
+                applyCaseOperation(_03_caseOperation.value); // Apply changes when the module is enabled
             }
         });
     }
@@ -20,28 +30,25 @@ export function _03_initCaseModule() {
     if (_03_caseOperation) {
         _03_caseOperation.addEventListener('change', function () {
             if (_03_caseCheckbox.checked) {
-                applyCaseOperation(this.value);
+                applyCaseOperation(this.value); // Apply changes when the dropdown value changes
             }
         });
     }
 
-    fileList.forEach(function (fileRow) {
-        const checkbox = fileRow.querySelector('.file-checkbox');
-        if (checkbox) {
-            checkbox.addEventListener('change', function () {
-                if (_03_caseCheckbox.checked) {
-                    if (checkbox.checked) {
-                        applyCaseOperation(_03_caseOperation.value);
-                    } else {
-                        resetSelectedFileNames([fileRow]); // Reset only this file row
-                    }
-                }
-            });
+    handleFileCheckboxChange(fileList, (fileRow, isChecked) => {
+        if (isChecked) {
+            applyCaseOperation(_03_caseOperation.value); // Apply changes to newly selected files
+        } else {
+            resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
 
     function applyCaseOperation(operation) {
-        fileList.forEach(function (fileRow) {
+        // Ensure the module is enabled before applying the logic
+        if (!_03_caseCheckbox.checked) {
+            return;
+        }
+        applyToSelectedFiles(fileList, (fileRow) => {
             const checkbox = fileRow.querySelector('.file-checkbox');
             const originalNameElement = fileRow.querySelector('.file-name');
             const newNameElement = fileRow.querySelector('.new-file-name');
@@ -60,9 +67,7 @@ export function _03_initCaseModule() {
                     case 'title':
                         newName = namePart
                             .split(' ')
-                            .map(function (word) {
-                                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
-                            })
+                            .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
                             .join(' ');
                         break;
                     case 'sentence':
@@ -71,18 +76,25 @@ export function _03_initCaseModule() {
                     case 'alternate':
                         newName = namePart
                             .split('')
-                            .map(function (char, index) {
-                                return index % 2 === 0 ? char.toUpperCase() : char.toLowerCase();
-                            })
+                            .map((char, index) => (index % 2 === 0 ? char.toUpperCase() : char.toLowerCase()))
                             .join('');
                         break;
                     default:
-                        newName = namePart; 
+                        newName = namePart; // Default to the original name
                 }
 
                 newNameElement.textContent = newName + extensionPart;
-                newNameElement.style.color = 'green';
+                highlightNewName(newNameElement); // Highlight the new name in green
             }
         });
     }
+
+    return {
+        getCaseOperation: function () {
+            return _03_caseOperation ? _03_caseOperation.value : 'Same';
+        },
+        isCaseModuleEnabled: function () {
+            return _03_caseCheckbox ? _03_caseCheckbox.checked : false;
+        },
+    };
 }
