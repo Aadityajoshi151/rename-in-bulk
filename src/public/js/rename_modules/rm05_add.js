@@ -18,6 +18,7 @@ export function _05_initAddModule() {
 
     // Initialize the module state
     toggleModule(_05_addCheckbox.checked, module_elements);
+    _05_insertPosition.value = '0';
 
     if (_05_addCheckbox) {
         _05_addCheckbox.addEventListener('change', function () {
