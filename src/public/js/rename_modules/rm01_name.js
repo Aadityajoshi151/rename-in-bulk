@@ -59,6 +59,10 @@ export function _01_initNameModule() {
     }
 
     function applyNameOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_01_nameModuleCheckbox.checked) {
+            return;
+        }
         const operation = _01_nameOperation.value;
         const newName = _01_nameText.value;
 

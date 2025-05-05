@@ -55,6 +55,10 @@ export function _05_initAddModule() {
     });
 
     function applyAddOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_05_addCheckbox.checked) {
+            return;
+        }
         const prefix = _05_prefixText.value || '';
         const suffix = _05_suffixText.value || '';
         const insertText = _05_insertText.value || '';

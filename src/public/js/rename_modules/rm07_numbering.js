@@ -20,7 +20,7 @@ export function _07_initNumberingModule() {
     // Initialize the module state
     toggleModule(_07_numberingCheckbox.checked, module_elements);
     updateAtPositionState();
-    setDefaultValues();
+    //setDefaultValues();
 
     if (_07_numberingCheckbox) {
         _07_numberingCheckbox.addEventListener('change', function () {
@@ -63,6 +63,10 @@ export function _07_initNumberingModule() {
     });
 
     function applyNumberingOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_07_numberingCheckbox.checked) {
+            return;
+        }
         const mode = _07_numberingMode.value || 'Prefix'; // Get numbering mode
         const atPosition = parseInt(_07_atPosition.value, 10); // Get position input
         const startIndex = parseInt(_07_startIndex.value, 10) || 0; // Get starting index

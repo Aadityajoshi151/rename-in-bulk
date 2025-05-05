@@ -55,6 +55,10 @@ export function _04_initRemoveModule() {
     });
 
     function applyRemoveOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_04_removeCheckbox.checked) {
+            return;
+        }
         const firstN = parseInt(_04_first_n.value, 10) || 0;
         const lastN = parseInt(_04_last_n.value, 10) || 0;
         const fromIndex = parseInt(_04_from.value, 10) || 0;

@@ -50,6 +50,10 @@ export function _06_initFolderNameModule() {
     });
 
     function applyFolderNameOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_06_folderNameCheckbox.checked) {
+            return;
+        }
         const folderName = getCurrentFolderNameFromURL(); // Dynamically fetch the current folder name
         const mode = _06_folderNameMode.value || 'Prefix'; // Get prefix/suffix mode
         const separator = _06_separator.value || ''; // Get separator value

@@ -50,6 +50,10 @@ export function _02_initReplaceModule() {
     });
 
     function applyReplaceOperation() {
+        // Ensure the module is enabled before applying the logic
+        if (!_02_replaceCheckbox.checked) {
+            return;
+        }
         const replaceText = _02_replaceText.value || '';
         const replaceWithText = _02_replaceWithText.value || '';
         const matchCase = _02_matchCaseCheckbox.checked;

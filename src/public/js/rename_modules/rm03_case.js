@@ -44,6 +44,10 @@ export function _03_initCaseModule() {
     });
 
     function applyCaseOperation(operation) {
+        // Ensure the module is enabled before applying the logic
+        if (!_03_caseCheckbox.checked) {
+            return;
+        }
         applyToSelectedFiles(fileList, (fileRow) => {
             const checkbox = fileRow.querySelector('.file-checkbox');
             const originalNameElement = fileRow.querySelector('.file-name');
