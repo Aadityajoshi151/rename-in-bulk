@@ -3,13 +3,16 @@ import { resetFileNames,
     splitFileName, 
     toggleModule, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _01_initNameModule() {
     const _01_nameModuleCheckbox = document.getElementById('01_nameModuleCheckbox');
     const _01_nameOperation = document.getElementById('01_nameOperation');
     const _01_nameText = document.getElementById('01_nameText');
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item');
 
     // Initialize the module state
@@ -49,6 +52,11 @@ export function _01_initNameModule() {
             resetSelectedFileNames([fileRow]);
         }
     });
+
+    // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyNameOperation(); // Reapply the name operation to all selected files
+    }, _01_nameModuleCheckbox, fileList);
 
     function updateInputState() {
         // Enable the input only if "Remove" (New Name) is selected
