@@ -4,13 +4,16 @@ import {
     resetFileNames, 
     resetSelectedFileNames, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _03_initCaseModule() {
     const _03_caseCheckbox = document.getElementById('03_caseModuleCheckbox');
     const _03_caseOperation = document.getElementById('03_caseOperation');
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
 
     // Initialize the module state
     toggleModule(_03_caseCheckbox.checked, [_03_caseOperation]);
@@ -42,6 +45,10 @@ export function _03_initCaseModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyCaseOperation(_03_caseOperation.value); // Reapply the case operation to all selected files
+    }, _03_caseCheckbox, fileList);
 
     function applyCaseOperation(operation) {
         // Ensure the module is enabled before applying the logic

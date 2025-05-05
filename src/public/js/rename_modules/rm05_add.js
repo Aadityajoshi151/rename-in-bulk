@@ -4,7 +4,8 @@ import {
     resetSelectedFileNames, 
     splitFileName, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _05_initAddModule() {
@@ -13,6 +14,8 @@ export function _05_initAddModule() {
     const _05_suffixText = document.getElementById('05_suffix_Text');
     const _05_insertText = document.getElementById('05_insert_Text');
     const _05_insertPosition = document.getElementById('05_insert_Position');
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_05_prefixText, _05_suffixText, _05_insertText, _05_insertPosition];
 
@@ -53,6 +56,11 @@ export function _05_initAddModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+        // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyAddOperation(); // Reapply the add operation to all selected files
+    }, _05_addCheckbox, fileList);
 
     function applyAddOperation() {
         // Ensure the module is enabled before applying the logic

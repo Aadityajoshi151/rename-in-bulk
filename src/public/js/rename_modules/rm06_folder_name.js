@@ -4,13 +4,16 @@ import {
     resetSelectedFileNames, 
     splitFileName, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _06_initFolderNameModule() {
     const _06_folderNameCheckbox = document.getElementById('06_folderNameModuleCheckbox');
     const _06_folderNameMode = document.getElementById('06_folderNameMode'); // Dropdown for prefix/suffix
     const _06_separator = document.getElementById('06_separator'); // Input for separator
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_06_folderNameMode, _06_separator];
 
@@ -48,6 +51,11 @@ export function _06_initFolderNameModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+        // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyFolderNameOperation(); // Reapply the folder name operation to all selected files
+    }, _06_folderNameCheckbox, fileList);
 
     function applyFolderNameOperation() {
         // Ensure the module is enabled before applying the logic

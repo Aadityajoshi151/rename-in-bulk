@@ -4,7 +4,8 @@ import {
     resetSelectedFileNames, 
     splitFileName, 
     applyToSelectedFiles, 
-    handleFileCheckboxChange, 
+    handleFileCheckboxChange,
+    handleSelectAllLogic,
     highlightNewName } from './common.js';
 
 export function _04_initRemoveModule() {
@@ -13,6 +14,8 @@ export function _04_initRemoveModule() {
     const _04_last_n = document.getElementById('04_last_n_Text');
     const _04_from = document.getElementById('04_from_Text');
     const _04_to = document.getElementById('04_to_Text');
+    const selectAllCheckbox = document.getElementById('selectAll'); // "Select All" checkbox
+    const fileCheckboxes = document.querySelectorAll('.file-checkbox'); // Individual file checkboxes
     const fileList = document.querySelectorAll('#fileList .file-item'); // Select all file rows
     const module_elements = [_04_first_n, _04_last_n, _04_from, _04_to];
 
@@ -53,6 +56,11 @@ export function _04_initRemoveModule() {
             resetSelectedFileNames([fileRow]); // Reset only this file row
         }
     });
+
+    // Add logic to handle "Select All" functionality
+    handleSelectAllLogic(selectAllCheckbox, fileCheckboxes, function () {
+        applyRemoveOperation(); // Reapply the remove operation to all selected files
+    }, _04_removeCheckbox, fileList);
 
     function applyRemoveOperation() {
         // Ensure the module is enabled before applying the logic
