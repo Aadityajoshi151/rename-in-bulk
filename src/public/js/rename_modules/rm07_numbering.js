@@ -20,6 +20,7 @@ export function _07_initNumberingModule() {
     // Initialize the module state
     toggleModule(_07_numberingCheckbox.checked, module_elements);
     updateAtPositionState();
+    setDefaultValues();
 
     if (_07_numberingCheckbox) {
         _07_numberingCheckbox.addEventListener('change', function () {
@@ -119,6 +120,13 @@ export function _07_initNumberingModule() {
         _07_padding.value = '0'; // Reset padding input
     }
 
+    function setDefaultValues() {
+        _07_atPosition.value = '0';
+        _07_startIndex.value = '0';
+        _07_increment.value = '1';
+        _07_padding.value = '0';
+    }
+    
     return {
         getNumberingMode: function () {
             return _07_numberingMode ? _07_numberingMode.value : 'Prefix';
