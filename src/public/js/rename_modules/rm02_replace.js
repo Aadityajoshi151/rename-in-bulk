@@ -1,4 +1,9 @@
-import { toggleModule, resetFileNames, resetSelectedFileNames, applyToSelectedFiles, handleFileCheckboxChange } from './common.js';
+import { 
+    toggleModule, 
+    resetFileNames, 
+    resetSelectedFileNames, 
+    applyToSelectedFiles, 
+    handleFileCheckboxChange } from './common.js';
 
 export function _02_initReplaceModule() {
     const _02_replaceCheckbox = document.getElementById('02_replaceModuleCheckbox');
